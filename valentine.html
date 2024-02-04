@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Day</title>
+    <style>
+        @keyframes blink {
+            0% {opacity: 1;}
+            40% {opacity: 1;}
+            60% {opacity: 0;}
+            100% {opacity: 0;}
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #ba4468; 
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+        }
+
+        .typing-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-top: 100px;
+        }
+        .input-cursor {
+            display: inline-block;
+            width: 2px;
+            background-color: white;
+            margin-left: 8px;
+            animation: blink .6s linear infinite alternate;
+            
+        }
+        .sentence {
+            font-size: 80px;
+            font-family: 'Lucida Console';
+        }
+        .check-box {
+            display: none; 
+            padding-top: 60px;
+        }
+        .answers {
+            justify-content: center;
+            padding-right: 20px; /* Adjust the padding as needed */
+            font-size: 30px;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* Add hover styles for the No answer */
+        .click-no {
+            display: none;
+            --randomX: 200px;
+            --randomY: 300px;
+            padding-top: 20px;
+        }
+
+        .click-no:hover {
+            transform: translate(var(--randomX), var(--randomY));
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+
+    <div class="typing-container">
+        <span id="sentence" class="sentence"></span>
+        <span class="input-cursor"></span>
+    </div>
+    
+    <div class="check-box">
+        <input type="checkbox" id="answer-yes" name="answer-yes" value="Yes" >
+        <label for="answer-yes" class="answers"> Yes</label><br>
+    </div>
+    <div class="click-no">
+        <input type="checkbox" id="answer-no" name="answer-no" value="No">
+        <label for="answer-no" class="answers"> No</label><br>
+    </div>
+    <script>
+
+        async function typeSentence(sentence, eleRef, delay = 100) {
+            const letters = sentence.split("");
+            let i = 0;
+            while(i < letters.length) {
+                await waitForMs(delay);
+                $(eleRef).append(letters[i]);
+                i++
+            }
+            // Reveal the check-box after typing
+            setTimeout(function() {
+                $('.click-no').fadeIn(); 
+                $('.check-box').fadeIn();
+            }, delay + 80);
+        }
+
+        function waitForMs(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms))
+        }
+
+        // Function to get a random integer between min and max (inclusive)
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const sentence = "Will you be my Valentines?";
+            const eleRef = document.getElementById('sentence');
+            typeSentence(sentence, eleRef);
+            document.documentElement.style.setProperty('--randomX', `${getRandomInt(-200, 200)}px`);
+            document.documentElement.style.setProperty('--randomY', `${getRandomInt(-200, 200)}px`);
+
+        });
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+</body>
+</html>
